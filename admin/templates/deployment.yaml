@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "admin.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  name: {{ template "admin.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "api.fullname" . }}
+    spec:
+      containers:
+      - image:  {{ .Values.ContainerImage }} 
+        name: {{ template "admin.fullname" . }}
+        resources: {}
+        env:
+        - name: BUILD_NUMBER
+          value: "{{ .Values.BuildNumber }}"
+      imagePullSecrets:
+      - name: regcred
+status: {}
+
